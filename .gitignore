@@ -1,0 +1,6 @@
+__pycache__/
+wandb_config.py
+*.ipynb
+jaxrl_m
+*.log
+tmp*
