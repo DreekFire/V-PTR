@@ -25,3 +25,15 @@ pretrained_encoder: a checkpoint of an ICVF model produced by the first phase of
 dataset: the multi-task robot dataset for the second phase of training. We use a set of tasks that does not contain our target task but is performed in the same environment.
 
 target_dataset: the single-task target dataset for the final phase of training.
+
+The tasks we evaluated in our paper were:
+- take croissant out of colander (tk6_targetdomain_croissantcolander_all)
+- put cucumber in pot (target_dataset=tk6_targetdomain_cucumberpot_combined_0515)
+- put sweet potato on plate (tk6_targetdomain_sweetpotatoplate_combined_0515)
+- put knife in pan (tk6_targetdomain_knifepan_combined_0515)
+- sweep beans (tk6_targetdomain_sweep_0805)
+- open door (tk1_targetdomain_openmicro_combined_0523)
+
+For all pick place tasks as well as sweep beans, our multi-task dataset was all_pickplace_v1_except_tk6
+
+For the microwave task, it was all_openclose_v1_except_tk1
