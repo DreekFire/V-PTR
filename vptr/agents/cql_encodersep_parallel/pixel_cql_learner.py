@@ -788,7 +788,7 @@ class PixelCQLLearnerEncoderSepParallel(Agent):
             'actor': self._actor,
             'temp': self._temp
         }
-        return save_dict
+        return jax.device_get(save_dict)
 
     def restore_checkpoint(self, path):
         # assert pathlib.Path(dir).is_file(), 'path {} not found!'.format(dir)
