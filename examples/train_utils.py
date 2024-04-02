@@ -19,7 +19,7 @@ from vptr.data.dataset import PropertyReplayBuffer
 import tensorflow as tf
 import re
 
-embed_dicts = np.load(repo_dir/'notebooks/final_embeddings/normalized_embeddings_dicts.npy', allow_pickle=True).item()
+embed_dicts = {} # np.load(repo_dir/'notebooks/final_embeddings/normalized_embeddings_dicts.npy', allow_pickle=True).item()
 embed_dicts['paraphrase-minilm'] = np.load(repo_dir/'notebooks/final_embeddings/paraphrase_embeddings.npy', allow_pickle=True).item()['paraphrase-MiniLM-L3']
 with (repo_dir/'notebooks/final_embeddings/embed_dict.pkl').open('rb') as pkl:
     embed_dicts['rule-based'] = pickle.load(pkl)
@@ -44,7 +44,7 @@ def offline_training_loop(variant, agent, eval_env, replay_buffer, eval_replay_b
     if hasattr(agent, 'use_bc_actor'):
         agent.use_bc_actor(True)
 
-    for i in tqdm(range(1, variant.online_start + 1),smoothing=0.1,):
+    for i in tqdm(range(1, min(variant.online_start, variant.max_steps) + 1),smoothing=0.1,):
         if i == bc_end + 1 and hasattr(agent, 'use_bc_actor'):
             print('ending BC training')
             agent.use_bc_actor(False)
@@ -662,12 +662,7 @@ def insert_data_real(variant, replay_buffer, trajs, reward_type='final_one', tas
             if re.search("[A-Z0-9,\.\!\-]", lang):
                 print('special character found in v1 langs: ', lang)
             if (not variant.filter_lang) or (lang and not re.search("[^a-z A-Z0-9,\.\!\-']", lang)):
-                # only for LC microwave tasks - remove after ICRA
-                if traj['task_description'] == 'open_door':
-                    lang = 'open door'
-                    embedding = embed_dicts['grif-text-v1-remap'].get(lang)
-                else:
-                    embedding = embed_dicts[variant.lang_embedding].get(lang)
+                embedding = embed_dicts[variant.lang_embedding].get(lang)
             if embedding is None:
                 print("embedding not found for '%s'" % lang)
                 continue
